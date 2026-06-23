@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budapest Metrói</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap');
+    </style>
+</head>
+
+<body>
+
+    <!------------------------------>
+    <!--         Fő Menü          -->
+    <!------------------------------>
+    <!-- #region fő menü  -->
+    <!-- START FORM -->
+    <div id="mainMenu">
+        <div id="start-form">
+            <h1><span class="material-symbols-outlined">subway</span> Budapest Metrói</h1>
+            <form id="gameForm" action="">
+                <input type="text" id="playerName" maxlength="20" placeholder="Játékos Név"
+                    pattern="[a-zA-Z0-9áÁéÉóÓöÖŐŐúÚüÜűŰ\s]{1,}" value="" required><span></span><br>
+                <button type="submit">Start</button>
+            </form>
+        </div>
+
+        <!-- SCOREBOARD -->
+        <table id="leaderboard">
+            <thead>
+                <th>Név</th>
+                <th>Pont</th>
+                <th>Idő</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>-</td>
+                    <td>0</td>
+                    <td><time datetime="PT0H0M0S">00:00:00</time></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!------------------------------>
+    <!--         Infó Menü        -->
+    <!------------------------------>
+    <!--#region infó menü  -->
+    <footer id="footer">
+        <button id="help-btn">?</button>
+    </footer>
+
+     <div id="description-overlay" class="popup-overlay">
+        <div id="description" class="popup">
+            <h2>Navigáció</h2>
+            <p>Húzz kártyát.</p>
+                    
+                    <div class="container">
+                        <div class="card-mock">
+                            <div class="station black-ops-one-regular relative">A</div>
+                            <svg id="card-svg">
+                                <line x1="50%" y1="0" x2="50%" y2="100%" stroke="var(--map-bg-color)" stroke-width="10%"
+                                stroke-linecap="rounded"></line>
+                            </svg>
+                        </div>
+                    </div>
+            <p>Kattitnts egy kártyának megfelelő állomásra</p>
+            <div class="container">
+                <img src="./media/connect.gif" alt="két állomás összekötése">
+            </div>
+            <p> Aktuálisan építhető szakszt (valamint a sorrendet) alul jelzi az alábbi ábra</p>
+            <div id="player-data" class="google-sans-code-1">
+                <span>Név</span>
+                <div id="metro-order ">
+                        <span class="metro google-sans-code-1  M2">M2</span>
+                        <span class="metro google-sans-code-1  inactive M4">M4</span>
+                        <span class="metro google-sans-code-1 inactive M1">M1</span> 
+                        <span class="metro google-sans-code-1 inactive M3">M3</span>
+                    </div>
+                    <span><time datetime="PT0H0M10S">00:00:10</time></span>
+            </div>
+            <h2>Szabályok:</h2>
+            <ul>
+                <li>
+                    Egy szakasz berajzolása mindig opcionális. Ha nem tudsz vagy nem akarsz szakaszt rajzolni, nyugodtan húzd fel a következő megállóhely kártyát.
+                </li>
+                 <li>
+                    (<div class="station black-ops-one-regular text-station">?</div>) ikonú kártya felhúzásakor akárhová behúzhatsz szakaszt a vonal végéből.
+                </li>
+                <li>
+                    Váltókártya (<div class="station black-ops-one-regular  text-station">🔃</div>) felhúzása esetén húzz egy új kártyát ami mutatja hová húzhatsz szakaszt.
+                    Most az az aktuális szaksz bármelyik pontjából kezdheted a szakaszod.
+                </li>
+               
+                <li>
+                    Minden szakasz, amit megrajzolsz, csakis egy egyenes vonal lehet, ami vízszintesen, függőlegesen (vagy haladó feladattal 45 fokban átlósan) halad.
+                </li>
+                <li>
+                    Egy fordulóban az elsőként megrajzolt szakasz az aktuális metróvonal kiinduló-megállóhelyéről indul ki, és 
+                    egy olyan betűvel jelölt megállóhelyen kell véget érnie, ami felfordított megállóhely kártyán látható.
+                </li>
+                <li>Minden szakasznak a metróvonalad egyik végéből kell kiindulnia (kivétel: váltókártya), és egy olyan betűvel 
+                    jelölt megállóhelyen kell véget érnie, amilyen a felfordított megállóhely kártyán szerepel (kivétel: ? kártya). 
+                </li>
+                <li>
+                    Minden szakasznak pontosan két megállóhelyet kell összekötnie.
+                </li>
+                <li>
+                    Szakasz nem haladhat keresztül egy harmadik megállóhelyen (amelyik se nem a kiinduló, se nem a cél megállóhely ennél a rajzolásnál).
+                </li>
+                <li>
+                    Szakasz nem keresztezhet másik szakaszt a nyílt pályán, csak megállóhelyen; de egy metróvonal nem csatlakozhat be ismét egy 
+                    olyan megállóhelybe, amin egyszer már keresztülment (kivétel: váltókártya); azonban olyan megállóhelybe behúzhatjuk, 
+                    ahol már másik metróvonal áthalad, ekkor ez egy forgalmas csomópont lesz.
+                </li>
+                <li>
+                    Nem rajzolhatsz több, mint egy szakaszt két megállóhely közé (nincsenek párhuzamos szakaszok), sem azonos metróvonalra, sem különbözőre.
+                    A ? betűjelú megállóhely Jokerként funkcionál. Bármilyen kártyát is fordítottunk fel,
+                     ha a többi szabály teljesül, ide behúzhatjuk a szakaszt betűjeltől függetlenül
+                </li>
+            </ul>
+             <h2>Pontozás:</h2>
+             <ul>
+                <li>Körönként: Érintett kerületek × Legtöbbször érintett kerületbeli állomások száma + Duna keresztezések</li>
+                <li>Érintett vasútállomások <span class="material-symbols-outlined train-icon">train</span></li>
+                <li>A pont táblának megfelelően azon állomások száma amiket több metróval is érintesz</li>
+
+             </ul>
+            <button id="close-popup">Bezárás</button>
+        </div>
+    </div>
+    <!--#endregion -->
+
+    <!------------------------------>
+    <!--          Játék           -->
+    <!------------------------------>
+    <!--#region játék  -->
+    <div id="game-menu">
+        <div id="game-left-side">
+            <div id="gameContainer" class="relative">
+                <table id="gameMap" class="relative"></table>
+                <svg id="connectionLines" viewBox="0 0 100 100">
+                    <!-- Duna -->
+                    <defs>
+                        <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <!-- 1️⃣ Blur the source alpha to make a soft shadow -->
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
+
+                            <!-- 2️⃣ Offset the shadow -->
+                            <feOffset dx="1" dy="1" result="offsetBlur" />
+
+                            <!-- 3️⃣ Color the shadow -->
+                            <feFlood flood-color="black" flood-opacity="0.5" result="shadowColor" />
+                            <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow" />
+
+                            <!-- 4️⃣ Merge shadow + original shape -->
+                            <feMerge>
+                                <feMergeNode in="shadow" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                        <filter id="insetShadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <!-- 1️⃣ Create an inverted alpha mask -->
+                            <feComponentTransfer in="SourceAlpha">
+                                <feFuncA type="table" tableValues="1 0" />
+                            </feComponentTransfer>
+
+                            <!-- 2️⃣ Offset and blur the inverted alpha (direction & softness) -->
+                            <feGaussianBlur stdDeviation="2" result="blur" />
+                            <feOffset dx="1" dy="1" result="offsetBlur" />
+
+                            <!-- 3️⃣ Fill it with color (like feDropShadow does) -->
+                            <feFlood flood-color="black" flood-opacity="0.5" result="shadowColor" />
+                            <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow" />
+
+                            <!-- 4️⃣ Clip the shadow back inside the shape -->
+                            <feComposite in="shadow" in2="SourceAlpha" operator="in" result="insetShadow" />
+
+                            <!-- 5️⃣ Draw the shape on top -->
+                            <feMerge>
+                                <feMergeNode in="SourceGraphic" />
+                                <feMergeNode in="insetShadow" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <!-- Duna -->
+                    <g filter="url(#insetShadow)">
+                        <line x1="60%" y1="0%" x2="60%" y2="30%" stroke="var(--duna)" stroke-width="var(--duna-rad)"
+                            stroke-linecap="round"></line>
+                        <line x1="60%" y1="30%" x2="50%" y2="40%" stroke="var(--duna)" stroke-width="var(--duna-rad)"
+                            stroke-linecap="round"></line>
+                        <line x1="50%" y1="40%" x2="50%" y2="70%" stroke="var(--duna)" stroke-width="var(--duna-rad)"
+                            stroke-linecap="round"></line>
+                        <line x1="50%" y1="70%" x2="70%" y2="90%" stroke="var(--duna)" stroke-width="var(--duna-rad)"
+                            stroke-linecap="round"></line>
+                        <line x1="70%" y1="90%" x2="70%" y2="100%" stroke="var(--duna)" stroke-width="var(--duna-rad)"
+                            stroke-linecap="round"></line>
+                    </g>
+                    <g filter="url(#dropShadow)">
+                       
+                    </g>
+                </svg>
+            </div>
+            <div id="player-data" class="google-sans-code-1">
+                <span id="player-name-display">Név</span>
+                <div id="metro-order"></div>
+                <span id="time-display"><time datetime="PT0H0M0S">00:00:00</time></span>
+            </div>
+        </div>
+        <div id="game-right-side">
+            <div class="card google-sans-code-1" id="flipCard">
+                <div class="card-face card-front"><span class="material-symbols-outlined">subway</span></div>
+                <div class="card-face card-back"><span>A</span></div>
+            </div>
+            <button class="google-sans-code-1">Új kártya</button>
+            <div class="score-container google-sans-code-1">
+                <div id="district-score">
+
+                </div>
+                <div id="erintett-palyaudvar">
+                </div>
+                <div id="csomopontok">
+                </div>
+                <div id="final-sum"></div>
+            </div>
+        </div>
+    </div>
+    <!--#endregion -->
+    <script type="module" src="main.js"></script>
+    <!-- <script src="Game/logic.js"></script> -->
+</body>
+
+</html>
